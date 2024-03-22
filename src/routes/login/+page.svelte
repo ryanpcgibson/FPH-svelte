@@ -1,9 +1,10 @@
 <script lang="ts">
-    import { auth } from "$lib/firebase";
-    import { SignedIn, SignedOut, Doc, Collection } from 'sveltefire';
+    import { getFirebaseContext, SignedIn, SignedOut } from "sveltefire";
     import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 
-    async function signInWithGoogle() {
+    const { auth } = getFirebaseContext();
+
+    async function signInWithGoogle(auth: any) {
             const provider = new GoogleAuthProvider();
             const user = await signInWithPopup(auth, provider);
             console.log(user)
@@ -19,5 +20,5 @@
 </SignedIn>
 
 <SignedOut let:auth>
-    <button on:click={signInWithGoogle}>Sign In</button>
+    <button on:click={signInWithGoogle(auth)}>Sign In</button>
 </SignedOut>

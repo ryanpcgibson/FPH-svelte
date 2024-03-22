@@ -1,3 +1,4 @@
+<!-- I dont think this will get used if I'm using sveltefire -->
 <script lang="ts">
     import { user } from "$lib/firebase";
 </script>
