@@ -1,10 +1,12 @@
 <script lang="ts">
     import { SignedIn, userStore } from "sveltefire";
     import { doc, getDoc, writeBatch } from "firebase/firestore";
-    import { auth, firestore } from "$lib/firebase";
+    import { user, userData, firestore } from "$lib/firebase";
 
-    const user = userStore(auth);
-    let username = "";
+    console.log("userData:", $userData);
+    console.log("user:", $user);
+
+        let username = "";
     let loading = false;
     let isAvailable = false;
 
@@ -56,43 +58,47 @@
         username?.length > 2 && username.length < 16 && re.test(username);
     $: isTouched = username.length > 0;
     $: isTaken = isValid && !isAvailable && !loading;
-    
 </script>
 
-<SignedIn let:user>
-    <h2>Username</h2>
-    <form class="w-2/5" on:submit|preventDefault={confirmUsername}>
-        <input
+{#if $userData?.username}
+    <p>You ({$userData.displayName}) already have a username, @{$userData.username}</p>
+    <p>Do you want to change it?</p>
+{/if}
+<form class="w-2/5" on:submit|preventDefault={confirmUsername}>
+    <input
         type="text"
         placeholder="Username"
         class="input w-full"
         bind:value={username}
         on:input={checkAvailability}
-        class:input-error={(!isValid && isTouched)}
+        class:input-error={!isValid && isTouched}
         class:input-warning={isTaken}
         class:input-success={isAvailable && isValid && !loading}
-      />
+    />
 
-      <div class="my-4 min-h-16 px-8 w-full">
+    <div class="my-4 min-h-16 px-8 w-full">
         {#if loading}
-          <p class="text-secondary">Checking availability of @{username}...</p>
+            <p class="text-secondary">
+                Checking availability of @{username}...
+            </p>
         {/if}
-    
+
         {#if !isValid && isTouched}
-          <p class="text-error text-sm">
-            must be 3-16 characters long, alphanumeric only
-          </p>
+            <p class="text-error text-sm">
+                must be 3-16 characters long, alphanumeric only
+            </p>
         {/if}
-    
+
         {#if isValid && !isAvailable && !loading}
-          <p class="text-warning text-sm">
-            @{username} is not available
-          </p>
+            <p class="text-warning text-sm">
+                @{username} is not available
+            </p>
         {/if}
-    
+
         {#if isAvailable}
-          <button class="btn btn-success">Confirm username @{username} </button>
+            <button class="btn btn-success"
+                >Confirm username @{username}
+            </button>
         {/if}
-      </div>
-    </form>
-</SignedIn>
+    </div>
+</form>
