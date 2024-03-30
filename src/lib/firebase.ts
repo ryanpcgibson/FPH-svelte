@@ -1,25 +1,44 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged, type Auth, type User } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { writable, type Readable, derived } from "svelte/store";
-import { userStore } from "sveltefire";
+// import { userStore } from "sveltefire";
 import { doc, onSnapshot } from "firebase/firestore";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBKWwo9WOL_JYwbclcwBiLf_eIYy9_DTOQ",
-  authDomain: "family-pet-history.firebaseapp.com",
-  projectId: "family-pet-history",
-  storageBucket: "family-pet-history.appspot.com",
-  messagingSenderId: "329100711747",
-  appId: "1:329100711747:web:bc6bed0a11e6a7b54741f6",
-  measurementId: "G-PPQXVQH6GK"
-};
+import firebaseConfig from './firebaseConfig.json';
 
 export const app = initializeApp(firebaseConfig);
 export const firestore = getFirestore(app);
 export const auth = getAuth(app);
 export const storage = getStorage(app);
+
+/**
+ * @returns a store with the current firebase user
+ */
+function userStore(auth: Auth) {
+  let unsubscribe: () => void;
+
+  if (!auth || !globalThis.window) {
+    console.warn('Auth is not initialized or not in browser');
+    const { subscribe } = writable<User | null>(null);
+    return {
+      subscribe,
+    }
+  }
+
+  const { subscribe } = writable(auth?.currentUser ?? null, (set) => {
+    unsubscribe = onAuthStateChanged(auth, (user) => {
+      set(user);
+    });
+
+    return () => unsubscribe();
+  });
+
+  return {
+    subscribe,
+  };
+}
+
 
 export const user = userStore(auth);
 
@@ -60,10 +79,11 @@ interface UserData {
 
 export const userData: Readable<UserData | null> = derived(user, ($user, set) => {
   if ($user) {
-    return docStore<UserData>(firestore, `users/${$user.uid}`).subscribe(set);
+    console.log('firebase.ts userData $user', $user);
+    return docStore<UserData>(`users/${$user.uid}`).subscribe(set);
   } else {
     set(null);
   }
-});  
+});
 
 console.log('firebase.ts loaded user', user, 'userData', userData);

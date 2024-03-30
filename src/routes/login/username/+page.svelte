@@ -3,10 +3,7 @@
     import { doc, getDoc, writeBatch } from "firebase/firestore";
     import { user, userData, firestore } from "$lib/firebase";
 
-    console.log("userData:", $userData);
-    console.log("user:", $user);
-
-        let username = "";
+    let username = "";
     let loading = false;
     let isAvailable = false;
 
