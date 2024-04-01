@@ -12,7 +12,13 @@
     ],
     "trailingSlash": "false",
     "cleanUrls": "true",
-    "redirects": [],
+    "redirects": [
+      {
+        "regex": "^/(.+)/$",
+        "destination": "^/:1",
+        "type": 301
+      }
+    ],
     "frameworksBackend": {
       "region": "us-central1",
       "invoker": "public"
