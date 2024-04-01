@@ -14,7 +14,7 @@
     "cleanUrls": "true",
     "redirects": [
       {
-        "regex": "^/(.+)/$",
+        "regex": "^\/(.+)\/$",
         "destination": "/:1",
         "type": 301
       }
