@@ -4,11 +4,20 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "source": ".",
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "trailingSlash": "false",
+    "cleanUrls": "true",
+    "redirects": [
+      {
+        "regex": "(.+)/$",
+        "destination": ":1",
+        "type": 301
+      }
     ],
     "frameworksBackend": {
       "region": "us-central1",

@@ -13,7 +13,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-static": "^3.0.1",
-		"@sveltejs/kit": "^2.0.0",
+		"@sveltejs/kit": "^2.5.5",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@types/cors": "^2.8.17",
 		"@types/lodash": "^4.17.0",
