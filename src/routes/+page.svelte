@@ -1,2 +1,7 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script>
+    const buildTime = process.env.BUILD_TIME;
+</script>
+
+<h1>Build Time</h1>
+<p>This app was built at: {buildTime}</p>
+<p>Environment: {process.env.NODE_ENV}</p>
